@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blackburn Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #fafaf8;
+  --surface: #fff;
+  --border: #e4e0d8;
+  --border-light: #eeeae3;
+  --forest: #1e3d2f;
+  --forest-mid: #2d5c46;
+  --forest-light: #e8f0eb;
+  --forest-lighter: #f0f6f2;
+  --text: #1a1a18;
+  --text-mid: #4a4a45;
+  --text-muted: #6b6960;
+  --text-faint: #a8a49c;
+  --red: #c0392b;
+  --red-bg: #fdf0ef;
+  --amber: #b7621a;
+  --amber-bg: #fdf6ee;
+  --green: #1e6b3a;
+  --green-bg: #edf5f0;
+  --blue: #1a4f7a;
+  --blue-bg: #eef4fa;
+  --radius: 10px;
+  --radius-lg: 14px;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2rem 1.5rem 4rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* -- Header -- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+.header-left {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+}
+.brand h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--forest);
+  line-height: 1;
+  text-transform: uppercase;
+}
+.brand p {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+.divider-v { width: 1px; height: 36px; background: var(--border); }
+.date-block .day {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+.date-block .full-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 3px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.icon-btn {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: border-color 0.2s, color 0.2s;
+}
+.icon-btn:hover { border-color: var(--forest); color: var(--forest); }
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--green);
+  background: var(--green-bg);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 0.5px solid rgba(30,107,58,0.2);
+}
+.live-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2.5s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* -- Sections -- */
+.section { margin-bottom: 2.5rem; }
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--forest);
+  letter-spacing: 0.04em;
+}
+.section-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-ts {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+}
+.section-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  background: var(--border-light);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* -- Quick Stats -- */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.stat-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.375rem;
+}
+.stat-card.accent {
+  background: var(--forest-lighter);
+  border-color: rgba(30,61,47,0.12);
+}
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.stat-card.accent .stat-label { color: rgba(30,61,47,0.45); }
+.stat-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+}
+.stat-card.accent .stat-value { color: var(--forest); }
+.stat-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-top: 6px;
+}
+.stat-card.accent .stat-sub { color: rgba(30,61,47,0.45); }
+
+/* -- Cards -- */
+.card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.375rem 1.5rem;
+}
+
+/* -- Email Grid -- */
+.email-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.email-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.125rem 1.25rem;
+  border-left: 3px solid var(--border);
+  transition: border-color 0.2s;
+}
+.email-card:hover { border-color: #c8c2b6; border-left-color: inherit; }
+.email-card.urgent { border-left-color: var(--red); }
+.email-card.action { border-left-color: var(--amber); }
+.email-card.fyi { border-left-color: var(--text-faint); }
+.email-from {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.email-subject {
+  font-size: 12px;
+  color: var(--text-mid);
+  margin-bottom: 8px;
+}
+.email-summary {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.email-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  border: 0.5px solid;
+  letter-spacing: 0.02em;
+}
+.tag-urgent { color: var(--red); border-color: rgba(192,57,43,0.25); background: var(--red-bg); }
+.tag-action { color: var(--amber); border-color: rgba(183,98,26,0.25); background: var(--amber-bg); }
+.tag-fyi { color: var(--text-faint); border-color: var(--border); background: transparent; }
+.tag-you { color: var(--blue); border-color: rgba(26,79,122,0.25); background: var(--blue-bg); }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--border-light) 25%, #f5f2ec 50%, var(--border-light) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  height: 12px;
+  margin-bottom: 4px;
+}
+.skeleton:last-child { width: 60%; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* -- Tasks -- */
+.task-list { display: flex; flex-direction: column; }
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 0.5px solid var(--border-light);
+}
+.task-item:last-child { border-bottom: none; }
+.priority-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  flex-shrink: 0; margin-top: 6px;
+}
+.p-4 { background: var(--red); }
+.p-3 { background: var(--amber); }
+.p-2 { background: #4a7fb5; }
+.p-1 { background: var(--text-faint); }
+.task-text { font-size: 13.5px; color: var(--text); line-height: 1.4; }
+.task-meta {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 2px;
+  font-family: 'DM Mono', monospace;
+}
+.task-meta.overdue { color: var(--red); }
+
+/* -- Rentals -- */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.metric-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.625rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.metric-card:hover { border-color: var(--forest); }
+.metric-card.green-tint {
+  background: var(--forest-lighter);
+  border-color: rgba(30,61,47,0.12);
+}
+.metric-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+.metric-card.green-tint .metric-label { color: rgba(30,61,47,0.45); }
+.metric-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+}
+.metric-card.green-tint .metric-value { color: var(--forest); }
+.metric-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-top: 8px;
+}
+.metric-card.green-tint .metric-sub { color: rgba(30,61,47,0.45); }
+.progress-wrap { margin-top: 12px; }
+.progress-bar-bg { height: 3px; background: var(--border); border-radius: 2px; }
+.progress-bar-fill { height: 3px; border-radius: 2px; background: var(--forest); transition: width 0.6s ease; }
+.metric-card.green-tint .progress-bar-bg { background: rgba(30,61,47,0.1); }
+.progress-label { display: flex; justify-content: space-between; margin-top: 5px; }
+.progress-label span { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--text-faint); }
+.fico-link {
+  display: block; text-decoration: none;
+  border: 0.5px solid rgba(30,61,47,0.15);
+  background: var(--forest-lighter);
+}
+.fico-link:hover { border-color: var(--forest); background: #e4efea; }
+.fico-link-row {
+  display: flex; align-items: center; justify-content: space-between; margin-top: 10px;
+}
+.fico-link-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--forest); letter-spacing: 0.06em; }
+.fico-arrow { font-size: 14px; color: var(--forest); opacity: 0.6; }
+.refi-strip {
+  background: var(--forest-lighter);
+  border: 0.5px solid rgba(30,61,47,0.1);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+.refi-strip-left { display: flex; align-items: center; gap: 10px; }
+.refi-strip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--forest); opacity: 0.4; }
+.refi-strip-text { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--forest); letter-spacing: 0.06em; }
+.refi-strip-hint { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-faint); }
+
+/* -- Expansion Slot -- */
+.expansion-slot {
+  background: var(--surface);
+  border: 0.5px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 1rem;
+}
+.expansion-slot span:first-child {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  color: var(--text-faint);
+}
+.expansion-slot span:last-child {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  opacity: 0.6;
+}
+
+/* -- State Messages -- */
+.state-msg {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  padding: 1.25rem 0;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.error-msg {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--red);
+  padding: 0.5rem 0;
+}
+
+/* -- Overlays -- */
+.overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(26,26,24,0.4);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 100;
+}
+.overlay.open { display: flex; }
+.panel {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  width: 400px;
+  border: 0.5px solid var(--border);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+}
+.panel h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--forest);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.04em;
+}
+.panel-subtitle {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.04em;
+}
+.field { margin-bottom: 1rem; }
+.field label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 5px;
+}
+.field input, .field select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field input:focus { border-color: var(--forest); background: #fff; }
+.panel-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.5rem; }
+.btn-cancel {
+  background: transparent; border: 0.5px solid var(--border);
+  color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+  font-size: 13px; padding: 8px 18px; border-radius: var(--radius); cursor: pointer;
+}
+.btn-save {
+  background: var(--forest); border: none; color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; padding: 8px 18px; border-radius: var(--radius); cursor: pointer;
+}
+.panel-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--green);
+  text-align: center;
+  margin-top: 10px;
+  letter-spacing: 0.04em;
+}
+.first-run-msg {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--amber);
+  background: var(--amber-bg);
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+  text-align: center;
+  border: 0.5px solid rgba(183,98,26,0.2);
+}
+
+/* -- Connectors -- */
+.connectors {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+.connector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 0.5px solid var(--border);
+  letter-spacing: 0.04em;
+}
+.connector-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+}
+.connector-dot.ok { background: var(--green); }
+.connector-dot.off { background: var(--text-faint); }
+.connector-dot.err { background: var(--red); }
+
+/* -- Responsive -- */
+@media (max-width: 780px) {
+  body { padding: 1.5rem 1rem 3rem; }
+  .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .header-right { flex-wrap: wrap; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .email-grid { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .stats-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- -- Settings Overlay -- -->
+<div class="overlay" id="settingsOverlay">
+  <div class="panel">
+    <h3>Settings</h3>
+    <div class="panel-subtitle">API keys are stored in your browser only</div>
+    <div id="firstRunMsg" class="first-run-msg" style="display:none">enter your credentials to get started</div>
+
+    <div class="field">
+      <label>Supabase Project URL</label>
+      <input type="text" id="inp-sb-url" placeholder="https://abc123.supabase.co">
+    </div>
+    <div class="field">
+      <label>Supabase Anon Key</label>
+      <input type="password" id="inp-sb-key" placeholder="eyJ...">
+    </div>
+    <div class="field">
+      <label>Anthropic API Key</label>
+      <input type="password" id="inp-anthropic" placeholder="sk-ant-...">
+    </div>
+    <div class="panel-actions">
+      <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
+      <button class="btn-save" onclick="saveSettings()">Save</button>
+    </div>
+    <p class="panel-hint">&#128274; stored in your browser only</p>
+  </div>
+</div>
+
+<!-- -- Edit Rentals Overlay -- -->
+<div class="overlay" id="editOverlay">
+  <div class="panel">
+    <h3>Update Rentals</h3>
+    <div class="field">
+      <label>Rent collected this month ($)</label>
+      <input type="number" id="inp-rent" placeholder="e.g. 5800">
+    </div>
+    <div class="field">
+      <label>Rent expected this month ($)</label>
+      <input type="number" id="inp-expected" placeholder="e.g. 6500">
+    </div>
+    <div class="field">
+      <label>Portfolio cash flow this month ($)</label>
+      <input type="number" id="inp-cashflow" placeholder="e.g. 420">
+    </div>
+    <div class="field">
+      <label>Total revolving debt ($)</label>
+      <input type="number" id="inp-debt" placeholder="e.g. 22080">
+    </div>
+    <div class="field">
+      <label>Current mortgage FICO median</label>
+      <input type="number" id="inp-fico" placeholder="e.g. 659">
+    </div>
+    <div class="panel-actions">
+      <button class="btn-cancel" onclick="closeEdit()">Cancel</button>
+      <button class="btn-save" onclick="saveMetrics()">Save</button>
+    </div>
+    <p class="panel-hint">saves to your browser automatically</p>
+  </div>
+</div>
+
+<!-- -- Header -- -->
+<div class="header">
+  <div class="header-left">
+    <div class="brand">
+      <h1>Blackburn</h1>
+      <p>Personal dashboard</p>
+    </div>
+    <div class="divider-v"></div>
+    <div class="date-block">
+      <div class="day" id="dayDisplay"></div>
+      <div class="full-date" id="dateDisplay"></div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-badge"><div class="live-dot"></div>live</div>
+    <button class="icon-btn" onclick="openSettings()">&#9881; settings</button>
+    <button class="icon-btn" onclick="App.refreshAll()">&#8635; refresh</button>
+  </div>
+</div>
+
+<!-- -- Connectors -- -->
+<div class="connectors">
+  <div class="connector"><div class="connector-dot off" id="dot-supabase"></div>supabase</div>
+  <div class="connector"><div class="connector-dot off" id="dot-claude"></div>claude</div>
+</div>
+
+<!-- -- Quick Stats -- -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-label">Unread Emails</div>
+    <div class="stat-value" id="stat-emails">--</div>
+    <div class="stat-sub" id="stat-emails-sub">connect supabase</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Action Needed</div>
+    <div class="stat-value" id="stat-action">--</div>
+    <div class="stat-sub" id="stat-action-sub">from inbox</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Open Tasks</div>
+    <div class="stat-value" id="stat-tasks">--</div>
+    <div class="stat-sub" id="stat-tasks-sub">from supabase</div>
+  </div>
+  <div class="stat-card accent">
+    <div class="stat-label">FICO Median</div>
+    <div class="stat-value" id="stat-fico">--</div>
+    <div class="stat-sub" id="stat-fico-sub">target: 700</div>
+  </div>
+</div>
+
+<!-- -- Emails -- -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">Inbox</span>
+    <div class="section-meta">
+      <span class="section-ts" id="ts-emails"></span>
+      <span class="section-count" id="count-emails">--</span>
+    </div>
+  </div>
+  <div id="emailList" class="email-grid">
+    <div class="state-msg" style="grid-column:1/-1">connect supabase in settings to see emails</div>
+  </div>
+</div>
+
+<!-- -- Tasks -- -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">Tasks</span>
+    <div class="section-meta">
+      <span class="section-ts" id="ts-tasks"></span>
+      <span class="section-count" id="count-tasks">--</span>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <input type="text" id="newTaskInput" placeholder="Add a task..." style="flex:1;padding:8px 12px;border:0.5px solid var(--border);border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--bg);outline:none;">
+      <select id="newTaskPriority" style="padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--radius);font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);background:var(--bg);outline:none;">
+        <option value="4">p1 urgent</option>
+        <option value="3">p2 high</option>
+        <option value="2" selected>p3 normal</option>
+        <option value="1">p4 low</option>
+      </select>
+      <button class="btn-save" onclick="addTask()" style="padding:8px 14px;font-size:12px;">add</button>
+    </div>
+    <div id="taskList" class="task-list">
+      <div class="state-msg">loading tasks...</div>
+    </div>
+  </div>
+</div>
+
+<!-- -- Rentals -- -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">Rental Portfolio</span>
+    <div class="section-meta">
+      <button class="icon-btn" onclick="openEdit()">&#8593; update</button>
+    </div>
+  </div>
+  <div class="metrics-grid">
+    <div class="metric-card green-tint" onclick="openEdit()">
+      <div class="metric-label">Rent Collected</div>
+      <div class="metric-value" id="m-rent">--</div>
+      <div class="metric-sub" id="m-rent-sub">of -- expected</div>
+      <div class="progress-wrap">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="m-rent-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="metric-card green-tint" onclick="openEdit()">
+      <div class="metric-label">Cash Flow</div>
+      <div class="metric-value" id="m-cashflow">--</div>
+      <div class="metric-sub">portfolio net this month</div>
+    </div>
+    <div class="metric-card" onclick="openEdit()">
+      <div class="metric-label">Revolving Debt</div>
+      <div class="metric-value" id="m-debt">--</div>
+      <div class="metric-sub">total balance across all cards</div>
+    </div>
+    <a class="metric-card fico-link" href="https://www.myfico.com" target="_blank">
+      <div class="metric-label">Mortgage FICO Median</div>
+      <div class="metric-value" id="m-fico">--</div>
+      <div class="metric-sub" id="m-fico-sub">target: 700</div>
+      <div class="progress-wrap">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="m-fico-bar" style="width:0%"></div></div>
+        <div class="progress-label"><span id="m-fico-lo">580</span><span>700</span></div>
+      </div>
+      <div class="fico-link-row">
+        <span class="fico-link-label">open myfico</span>
+        <span class="fico-arrow">&rarr;</span>
+      </div>
+    </a>
+  </div>
+  <div class="refi-strip">
+    <div class="refi-strip-left">
+      <div class="refi-strip-dot"></div>
+      <div class="refi-strip-text">portfolio refi goal &mdash; 5 properties &middot; Blackburn Real Estate LLC</div>
+    </div>
+    <div class="refi-strip-hint">hit 700 &rarr; contact Ian</div>
+  </div>
+</div>
+
+<!-- -- Expansion -- -->
+<div class="expansion-slot">
+  <span>expansion slot</span>
+  <span>weather &middot; news &middot; calendar &middot; anything</span>
+</div>
+
+<script>
+/* ===============================================
+   Config -- all keys from localStorage
+   =============================================== */
+const Config = {
+  get SUPABASE_URL()  { return localStorage.getItem('cfg-sb-url') || ''; },
+  get SUPABASE_KEY()  { return localStorage.getItem('cfg-sb-key') || ''; },
+  get ANTHROPIC_KEY() { return localStorage.getItem('cfg-anthropic-key') || ''; },
+  REFRESH_MS: 5 * 60 * 1000,
+  CLAUDE_MODEL: 'claude-sonnet-4-20250514',
+  MAX_EMAILS: 20,
+};
+
+/* ===============================================
+   Helpers
+   =============================================== */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmt(n) { return n > 0 ? '$' + n.toLocaleString() : '--'; }
+function timeStr() { return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+function setTs(id) { document.getElementById(id).textContent = 'updated ' + timeStr(); }
+function setDot(id, state) { document.getElementById(id).className = 'connector-dot ' + state; }
+
+/* ===============================================
+   Supabase -- lightweight REST client
+   =============================================== */
+const Supabase = {
+  headers() {
+    return {
+      'apikey': Config.SUPABASE_KEY,
+      'Authorization': 'Bearer ' + Config.SUPABASE_KEY,
+      'Content-Type': 'application/json',
+    };
+  },
+
+  async fetchEmails(limit) {
+    limit = limit || Config.MAX_EMAILS;
+    const url = Config.SUPABASE_URL + '/rest/v1/emails?order=received_at.desc&limit=' + limit;
+    const res = await fetch(url, { headers: this.headers() });
+    if (!res.ok) throw new Error('Supabase ' + res.status);
+    return res.json();
+  },
+
+  async updateSummary(id, summaryJson) {
+    const url = Config.SUPABASE_URL + '/rest/v1/emails?id=eq.' + id;
+    await fetch(url, {
+      method: 'PATCH',
+      headers: Object.assign(this.headers(), { 'Prefer': 'return=minimal' }),
+      body: JSON.stringify({ summary: summaryJson }),
+    });
+  },
+
+  async fetchTasks() {
+    const url = Config.SUPABASE_URL + '/rest/v1/tasks?order=priority.desc,created_at.desc&is_done=eq.false&limit=20';
+    const res = await fetch(url, { headers: this.headers() });
+    if (!res.ok) throw new Error('Supabase ' + res.status);
+    return res.json();
+  },
+
+  async addTask(content, priority) {
+    const url = Config.SUPABASE_URL + '/rest/v1/tasks';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: Object.assign(this.headers(), { 'Prefer': 'return=representation' }),
+      body: JSON.stringify({ content: content, priority: priority, is_done: false }),
+    });
+    if (!res.ok) throw new Error('Supabase ' + res.status);
+    return res.json();
+  },
+
+  async completeTask(id) {
+    const url = Config.SUPABASE_URL + '/rest/v1/tasks?id=eq.' + id;
+    await fetch(url, {
+      method: 'PATCH',
+      headers: Object.assign(this.headers(), { 'Prefer': 'return=minimal' }),
+      body: JSON.stringify({ is_done: true }),
+    });
+  },
+};
+
+/* ===============================================
+   Claude Summarizer
+   =============================================== */
+const Summarizer = {
+  async summarizeBatch(emails) {
+    const unsummarized = emails.filter(function(e) { return !e.summary; });
+    if (!unsummarized.length || !Config.ANTHROPIC_KEY) return;
+
+    var emailBlock = unsummarized.map(function(e, i) {
+      return '[' + (i+1) + '] From: ' + e.from_name + '\nSubject: ' + e.subject + '\nBody: ' + (e.snippet || e.body_text || '(empty)');
+    }).join('\n\n');
+
+    try {
+      var res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': Config.ANTHROPIC_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: Config.CLAUDE_MODEL,
+          max_tokens: 1500,
+          system: 'You summarize emails for a personal dashboard for Ethan Blackburn  -- W2 employee at The David Allen Company and owner of Blackburn Real Estate LLC (6 rental properties). Return a JSON array only, no markdown. Each object: "index" (1-based position in list), "summary" (one plain sentence), "tags" (array of zero or more of: "urgent", "action_needed", "mentions_you", "fyi").',
+          messages: [{ role: 'user', content: emailBlock }],
+        }),
+      });
+      var data = await res.json();
+      var raw = data.content[0].text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+      var results = JSON.parse(raw);
+      setDot('dot-claude', 'ok');
+
+      results.forEach(function(r) {
+        var email = unsummarized[r.index - 1];
+        if (!email) return;
+        var summaryObj = { summary: r.summary, tags: r.tags };
+        email.summary = summaryObj;
+        Supabase.updateSummary(email.id, summaryObj);
+      });
+
+      renderEmails(emails);
+    } catch(e) {
+      console.error('Summarization failed:', e);
+      setDot('dot-claude', 'err');
+    }
+  },
+};
+
+/* ===============================================
+   Render -- Emails
+   =============================================== */
+function renderEmails(emails) {
+  var el = document.getElementById('emailList');
+  var countEl = document.getElementById('count-emails');
+
+  if (!emails.length) {
+    el.innerHTML = '<div class="state-msg" style="grid-column:1/-1">inbox zero &#10003;</div>';
+    countEl.textContent = '0';
+    return;
+  }
+
+  var actionCount = 0;
+  var html = emails.map(function(e) {
+    var s = e.summary || {};
+    if (typeof s === 'string') { try { s = JSON.parse(s); } catch(x) { s = {}; } }
+    var tags = s.tags || [];
+    var isUrgent = tags.indexOf('urgent') !== -1;
+    var isAction = tags.indexOf('action_needed') !== -1;
+    if (isAction || isUrgent) actionCount++;
+
+    var borderClass = isUrgent ? 'urgent' : isAction ? 'action' : 'fyi';
+    var tagHtml = tags.map(function(t) {
+      var cls = t === 'urgent' ? 'tag-urgent' : t === 'action_needed' ? 'tag-action' : t === 'mentions_you' ? 'tag-you' : 'tag-fyi';
+      return '<span class="tag ' + cls + '">' + t.replace('_', ' ') + '</span>';
+    }).join('');
+
+    var summaryHtml = s.summary
+      ? '<div class="email-summary">' + esc(s.summary) + '</div>'
+      : '<div class="skeleton"></div><div class="skeleton"></div>';
+
+    return '<div class="email-card ' + borderClass + '">' +
+      '<div class="email-from">' + esc(e.from_name || 'Unknown') + '</div>' +
+      '<div class="email-subject">' + esc(e.subject || '(no subject)') + '</div>' +
+      summaryHtml +
+      '<div class="email-tags">' + tagHtml + '</div>' +
+    '</div>';
+  }).join('');
+
+  el.innerHTML = html;
+  countEl.textContent = emails.length + ' emails';
+  document.getElementById('stat-emails').textContent = emails.length;
+  document.getElementById('stat-emails-sub').textContent = actionCount ? actionCount + ' need action' : 'all clear';
+  document.getElementById('stat-action').textContent = actionCount || 0;
+  document.getElementById('stat-action-sub').textContent = actionCount ? 'from inbox' : 'nothing urgent';
+}
+
+/* ===============================================
+   Render -- Tasks (Supabase)
+   =============================================== */
+function renderTasks(tasks) {
+  var el = document.getElementById('taskList');
+  var countEl = document.getElementById('count-tasks');
+
+  countEl.textContent = tasks.length + ' open';
+  document.getElementById('stat-tasks').textContent = tasks.length;
+  document.getElementById('stat-tasks-sub').textContent = tasks.length ? tasks.length + ' open' : 'all clear';
+
+  if (!tasks.length) {
+    el.innerHTML = '<div class="state-msg">all clear &#10003;</div>';
+    return;
+  }
+
+  el.innerHTML = tasks.map(function(t) {
+    return '<div class="task-item">' +
+      '<div class="priority-dot p-' + t.priority + '" style="cursor:pointer" onclick="completeTask(\'' + t.id + '\')" title="mark done"></div>' +
+      '<div style="flex:1"><div class="task-text">' + esc(t.content) + '</div>' +
+      '<div class="task-meta">' + (t.due_date ? 'due ' + t.due_date : 'no due date') + '</div></div>' +
+      '<button onclick="completeTask(\'' + t.id + '\')" style="background:none;border:0.5px solid var(--border);border-radius:var(--radius);padding:4px 10px;font-family:DM Mono,monospace;font-size:10px;color:var(--text-faint);cursor:pointer;">done</button>' +
+    '</div>';
+  }).join('');
+}
+
+async function addTask() {
+  var input = document.getElementById('newTaskInput');
+  var priority = document.getElementById('newTaskPriority').value;
+  var content = input.value.trim();
+  if (!content) return;
+  try {
+    await Supabase.addTask(content, parseInt(priority));
+    input.value = '';
+    App.refreshTasks();
+  } catch(e) {
+    alert('Failed to add task: ' + e.message);
+  }
+}
+
+async function completeTask(id) {
+  try {
+    await Supabase.completeTask(id);
+    App.refreshTasks();
+  } catch(e) {
+    alert('Failed to complete task: ' + e.message);
+  }
+}
+
+document.getElementById('newTaskInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') addTask();
+});
+
+/* ===============================================
+   Render -- Rentals (localStorage)
+   =============================================== */
+function loadMetrics() {
+  var rent = parseFloat(localStorage.getItem('m-rent') || '0');
+  var expected = parseFloat(localStorage.getItem('m-expected') || '0');
+  var cashflow = parseFloat(localStorage.getItem('m-cashflow') || '0');
+  var debt = parseFloat(localStorage.getItem('m-debt') || '0');
+  var fico = parseFloat(localStorage.getItem('m-fico') || '0');
+  var pct = function(a, b) { return b > 0 ? Math.min(100, Math.round(a / b * 100)) : 0; };
+
+  document.getElementById('m-rent').textContent = fmt(rent);
+  document.getElementById('m-rent-sub').textContent = expected > 0 ? 'of ' + fmt(expected) + ' expected' : 'of  -- expected';
+  document.getElementById('m-rent-bar').style.width = pct(rent, expected) + '%';
+
+  var cfEl = document.getElementById('m-cashflow');
+  cfEl.textContent = cashflow !== 0 ? (cashflow >= 0 ? '+$' : '-$') + Math.abs(cashflow).toLocaleString() : ' --';
+  cfEl.style.color = cashflow < 0 ? 'var(--red)' : 'var(--forest)';
+
+  document.getElementById('m-debt').textContent = fmt(debt);
+
+  if (fico > 0) {
+    var base = 580, target = 700;
+    var progress = Math.max(0, Math.min(100, Math.round((fico - base) / (target - base) * 100)));
+    document.getElementById('m-fico').textContent = fico;
+    document.getElementById('stat-fico').textContent = fico;
+    var pts = target - fico;
+    var ficoMsg = fico >= target ? '&#10003; target reached' : pts + ' pts to go';
+    document.getElementById('m-fico-sub').textContent = ficoMsg;
+    document.getElementById('stat-fico-sub').textContent = fico >= target ? 'target reached' : pts + ' pts to 700';
+    document.getElementById('m-fico-bar').style.width = progress + '%';
+    document.getElementById('m-fico-lo').textContent = String(base);
+  }
+}
+
+/* ===============================================
+   Settings & Edit Overlays
+   =============================================== */
+function openSettings(firstRun) {
+  document.getElementById('inp-sb-url').value = localStorage.getItem('cfg-sb-url') || '';
+  document.getElementById('inp-sb-key').value = localStorage.getItem('cfg-sb-key') || '';
+  document.getElementById('inp-anthropic').value = localStorage.getItem('cfg-anthropic-key') || '';
+  document.getElementById('firstRunMsg').style.display = firstRun ? 'block' : 'none';
+  document.getElementById('settingsOverlay').classList.add('open');
+}
+function closeSettings() { document.getElementById('settingsOverlay').classList.remove('open'); }
+function saveSettings() {
+  var fields = [
+    ['inp-sb-url', 'cfg-sb-url'],
+    ['inp-sb-key', 'cfg-sb-key'],
+    ['inp-anthropic', 'cfg-anthropic-key'],
+  ];
+  fields.forEach(function(f) {
+    var v = document.getElementById(f[0]).value.trim();
+    if (v) localStorage.setItem(f[1], v);
+  });
+  closeSettings();
+  App.refreshAll();
+}
+document.getElementById('settingsOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeSettings();
+});
+
+function openEdit() {
+  ['rent','expected','cashflow','debt','fico'].forEach(function(k) {
+    document.getElementById('inp-' + k).value = localStorage.getItem('m-' + k) || '';
+  });
+  document.getElementById('editOverlay').classList.add('open');
+}
+function closeEdit() { document.getElementById('editOverlay').classList.remove('open'); }
+function saveMetrics() {
+  ['rent','expected','cashflow','debt','fico'].forEach(function(k) {
+    localStorage.setItem('m-' + k, document.getElementById('inp-' + k).value);
+  });
+  closeEdit();
+  loadMetrics();
+}
+document.getElementById('editOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeEdit();
+});
+
+/* ===============================================
+   Date Display
+   =============================================== */
+function updateDate() {
+  var now = new Date();
+  var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('dayDisplay').textContent = days[now.getDay()];
+  document.getElementById('dateDisplay').textContent = months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+}
+
+/* ===============================================
+   App -- main controller
+   =============================================== */
+const App = {
+  async refreshEmails() {
+    if (!Config.SUPABASE_URL || !Config.SUPABASE_KEY) {
+      setDot('dot-supabase', 'off');
+      return;
+    }
+    try {
+      var emails = await Supabase.fetchEmails();
+      setDot('dot-supabase', 'ok');
+      renderEmails(emails);
+      setTs('ts-emails');
+      if (Config.ANTHROPIC_KEY) {
+        setDot('dot-claude', 'ok');
+        Summarizer.summarizeBatch(emails);
+      }
+    } catch(e) {
+      setDot('dot-supabase', 'err');
+      document.getElementById('emailList').innerHTML = '<div class="error-msg" style="grid-column:1/-1">couldn\'t load emails  -- check Supabase settings</div>';
+    }
+  },
+
+  async refreshTasks() {
+    if (!Config.SUPABASE_URL || !Config.SUPABASE_KEY) return;
+    var el = document.getElementById('taskList');
+    el.innerHTML = '<div class="state-msg">loading...</div>';
+    try {
+      var tasks = await Supabase.fetchTasks();
+      renderTasks(tasks);
+      setTs('ts-tasks');
+    } catch(e) {
+      el.innerHTML = '<div class="error-msg">couldn\'t load tasks -- ' + esc(e.message) + '</div>';
+      document.getElementById('count-tasks').textContent = '--';
+    }
+  },
+
+  async refreshAll() {
+    updateDate();
+    loadMetrics();
+    await Promise.allSettled([this.refreshEmails(), this.refreshTasks()]);
+  },
+
+  init() {
+    updateDate();
+    loadMetrics();
+    this.refreshAll();
+    setInterval(function() { App.refreshAll(); }, Config.REFRESH_MS);
+    if (!Config.SUPABASE_URL) {
+      setTimeout(function() { openSettings(true); }, 500);
+    }
+  },
+};
+
+App.init();
+</script>
+</body>
+</html>
