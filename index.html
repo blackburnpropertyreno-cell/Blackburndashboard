@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blackburn Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #fafaf8;
+  --surface: #fff;
+  --border: #e4e0d8;
+  --border-light: #eeeae3;
+  --forest: #1e3d2f;
+  --forest-mid: #2d5c46;
+  --forest-light: #e8f0eb;
+  --forest-lighter: #f0f6f2;
+  --text: #1a1a18;
+  --text-mid: #4a4a45;
+  --text-muted: #6b6960;
+  --text-faint: #a8a49c;
+  --red: #c0392b;
+  --red-bg: #fdf0ef;
+  --amber: #b7621a;
+  --amber-bg: #fdf6ee;
+  --green: #1e6b3a;
+  --green-bg: #edf5f0;
+  --blue: #1a4f7a;
+  --blue-bg: #eef4fa;
+  --radius: 10px;
+  --radius-lg: 14px;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2rem 1.5rem 4rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* -- Header -- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+.header-left {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+}
+.brand h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--forest);
+  line-height: 1;
+  text-transform: uppercase;
+}
+.brand p {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+.divider-v { width: 1px; height: 36px; background: var(--border); }
+.date-block .day {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+.date-block .full-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 3px;
+}
+.fico-header {
+  text-align: right;
+  cursor: pointer;
+}
+.fico-header:hover .fico-scores { color: var(--forest); }
+.fico-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.fico-scores {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--forest);
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+.fico-updated {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.icon-btn {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: border-color 0.2s, color 0.2s;
+}
+.icon-btn:hover { border-color: var(--forest); color: var(--forest); }
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--green);
+  background: var(--green-bg);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 0.5px solid rgba(30,107,58,0.2);
+}
+.live-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2.5s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* -- Sections -- */
+.section { margin-bottom: 2.5rem; }
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--forest);
+  letter-spacing: 0.04em;
+}
+.section-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-ts {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+}
+.section-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  background: var(--border-light);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* -- Stats Row -- */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.stat-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.375rem;
+}
+.stat-card.accent {
+  background: var(--forest-lighter);
+  border-color: rgba(30,61,47,0.12);
+}
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.stat-card.accent .stat-label { color: rgba(30,61,47,0.45); }
+.stat-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+}
+.stat-card.accent .stat-value { color: var(--forest); }
+.stat-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-top: 6px;
+}
+.stat-card.accent .stat-sub { color: rgba(30,61,47,0.45); }
+
+/* -- Cards -- */
+.card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.375rem 1.5rem;
+}
+
+/* -- Email Grid -- */
+.email-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.email-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.125rem 1.25rem;
+  border-left: 3px solid var(--border);
+  transition: border-color 0.2s;
+}
+.email-card:hover { border-color: #c8c2b6; border-left-color: inherit; }
+.email-card.urgent { border-left-color: var(--red); }
+.email-card.action { border-left-color: var(--amber); }
+.email-card.fyi { border-left-color: var(--text-faint); }
+.email-from { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.email-subject { font-size: 12px; color: var(--text-mid); margin-bottom: 8px; }
+.email-summary { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px; }
+.email-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  border: 0.5px solid;
+  letter-spacing: 0.02em;
+}
+.tag-urgent { color: var(--red); border-color: rgba(192,57,43,0.25); background: var(--red-bg); }
+.tag-action { color: var(--amber); border-color: rgba(183,98,26,0.25); background: var(--amber-bg); }
+.tag-fyi { color: var(--text-faint); border-color: var(--border); background: transparent; }
+.tag-you { color: var(--blue); border-color: rgba(26,79,122,0.25); background: var(--blue-bg); }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--border-light) 25%, #f5f2ec 50%, var(--border-light) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  height: 12px;
+  margin-bottom: 4px;
+}
+.skeleton:last-child { width: 60%; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* -- Tasks -- */
+.task-list { display: flex; flex-direction: column; }
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 0.5px solid var(--border-light);
+}
+.task-item:last-child { border-bottom: none; }
+.priority-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  flex-shrink: 0; margin-top: 6px;
+}
+.p-4 { background: var(--red); }
+.p-3 { background: var(--amber); }
+.p-2 { background: #4a7fb5; }
+.p-1 { background: var(--text-faint); }
+.task-text { font-size: 13.5px; color: var(--text); line-height: 1.4; }
+.task-meta {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 2px;
+  font-family: 'DM Mono', monospace;
+}
+
+/* -- Rentals -- */
+.metric-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.625rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.metric-card:hover { border-color: var(--forest); }
+.metric-card.green-tint {
+  background: var(--forest-lighter);
+  border-color: rgba(30,61,47,0.12);
+}
+.metric-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+.metric-card.green-tint .metric-label { color: rgba(30,61,47,0.45); }
+.metric-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+}
+.metric-card.green-tint .metric-value { color: var(--forest); }
+.metric-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-top: 8px;
+}
+.metric-card.green-tint .metric-sub { color: rgba(30,61,47,0.45); }
+.progress-wrap { margin-top: 12px; }
+.progress-bar-bg { height: 3px; background: var(--border); border-radius: 2px; }
+.progress-bar-fill { height: 3px; border-radius: 2px; background: var(--forest); transition: width 0.6s ease; }
+.metric-card.green-tint .progress-bar-bg { background: rgba(30,61,47,0.1); }
+.progress-label { display: flex; justify-content: space-between; margin-top: 5px; }
+.progress-label span { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--text-faint); }
+
+/* -- Tenant rows -- */
+.tenant-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 0.5px solid var(--border-light);
+  font-size: 13px;
+}
+.tenant-row:last-child { border-bottom: none; }
+.tenant-name { color: var(--text); flex: 1; }
+.tenant-due { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-faint); margin-right: 12px; }
+.tenant-amt { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-muted); margin-right: 12px; }
+.tenant-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.tenant-paid { color: var(--green); background: var(--green-bg); border: 0.5px solid rgba(30,107,58,0.2); }
+.tenant-pending { color: var(--text-faint); background: var(--border-light); border: 0.5px solid var(--border); }
+.tenant-late { color: var(--red); background: var(--red-bg); border: 0.5px solid rgba(192,57,43,0.2); }
+
+/* -- Tabs -- */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+.tab-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  background: transparent;
+  border: none;
+  padding: 1rem 1.5rem 0.875rem;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+.tab-btn:hover { color: var(--text-muted); }
+.tab-btn.active { color: var(--forest); }
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0; right: 0;
+  height: 2px;
+  background: var(--forest);
+  border-radius: 2px 2px 0 0;
+}
+.tab-view { display: none; }
+.tab-view.active { display: block; }
+
+/* -- Refi strip -- */
+.refi-strip {
+  background: var(--forest-lighter);
+  border: 0.5px solid rgba(30,61,47,0.1);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+.refi-strip-left { display: flex; align-items: center; gap: 10px; }
+.refi-strip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--forest); opacity: 0.4; }
+.refi-strip-text { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--forest); letter-spacing: 0.06em; }
+.refi-strip-hint { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-faint); }
+
+/* -- State Messages -- */
+.state-msg {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  padding: 1.25rem 0;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.error-msg {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--red);
+  padding: 0.5rem 0;
+}
+
+/* -- Overlays -- */
+.overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(26,26,24,0.4);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 100;
+}
+.overlay.open { display: flex; }
+.panel {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 0.5px solid var(--border);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+}
+.panel h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--forest);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.04em;
+}
+.panel-subtitle {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.04em;
+}
+.field { margin-bottom: 1rem; }
+.field label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 5px;
+}
+.field input, .field select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field input:focus { border-color: var(--forest); background: #fff; }
+.panel-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.5rem; }
+.btn-cancel {
+  background: transparent; border: 0.5px solid var(--border);
+  color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+  font-size: 13px; padding: 8px 18px; border-radius: var(--radius); cursor: pointer;
+}
+.btn-save {
+  background: var(--forest); border: none; color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; padding: 8px 18px; border-radius: var(--radius); cursor: pointer;
+}
+.btn-danger {
+  background: transparent; border: 0.5px solid rgba(192,57,43,0.3);
+  color: var(--red); font-family: 'DM Sans', sans-serif;
+  font-size: 12px; padding: 6px 12px; border-radius: var(--radius); cursor: pointer;
+}
+.panel-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--green);
+  text-align: center;
+  margin-top: 10px;
+  letter-spacing: 0.04em;
+}
+.first-run-msg {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--amber);
+  background: var(--amber-bg);
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+  text-align: center;
+  border: 0.5px solid rgba(183,98,26,0.2);
+}
+
+/* -- Connectors -- */
+.connectors {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+.connector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 0.5px solid var(--border);
+  letter-spacing: 0.04em;
+}
+.connector-dot { width: 5px; height: 5px; border-radius: 50%; }
+.connector-dot.ok { background: var(--green); }
+.connector-dot.off { background: var(--text-faint); }
+.connector-dot.err { background: var(--red); }
+
+/* -- Calendar -- */
+.cal-list { display: flex; flex-direction: column; }
+.cal-event {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 0.5px solid var(--border-light);
+}
+.cal-event:last-child { border-bottom: none; }
+.cal-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.cal-dot.cal-w2 { background: var(--blue); }
+.cal-dot.cal-re { background: var(--forest); }
+.cal-dot.cal-personal { background: var(--amber); }
+.cal-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  min-width: 70px;
+  flex-shrink: 0;
+}
+.cal-title { font-size: 13.5px; color: var(--text); line-height: 1.4; }
+.cal-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+.cal-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+  align-self: center;
+}
+.cal-tag.cal-w2 { color: var(--blue); background: var(--blue-bg); border: 0.5px solid rgba(26,79,122,0.2); }
+.cal-tag.cal-re { color: var(--forest); background: var(--forest-light); border: 0.5px solid rgba(30,61,47,0.15); }
+.cal-tag.cal-personal { color: var(--amber); background: var(--amber-bg); border: 0.5px solid rgba(183,98,26,0.2); }
+
+/* -- Responsive -- */
+@media (max-width: 780px) {
+  body { padding: 1.5rem 1rem 3rem; }
+  .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .header-left { flex-wrap: wrap; }
+  .header-right { flex-wrap: wrap; }
+  .stats-row { grid-template-columns: 1fr; }
+  .email-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Settings Overlay -->
+<div class="overlay" id="settingsOverlay">
+  <div class="panel">
+    <h3>Settings</h3>
+    <div class="panel-subtitle">API keys stored in your browser only</div>
+    <div id="firstRunMsg" class="first-run-msg" style="display:none">enter your credentials to get started</div>
+    <div class="field">
+      <label>Supabase Project URL</label>
+      <input type="text" id="inp-sb-url" placeholder="https://abc123.supabase.co">
+    </div>
+    <div class="field">
+      <label>Supabase Anon Key</label>
+      <input type="password" id="inp-sb-key" placeholder="eyJ...">
+    </div>
+    <div class="field">
+      <label>Anthropic API Key</label>
+      <input type="password" id="inp-anthropic" placeholder="sk-ant-...">
+    </div>
+    <div class="panel-actions">
+      <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
+      <button class="btn-save" onclick="saveSettings()">Save</button>
+    </div>
+    <p class="panel-hint">&#128274; stored in your browser only</p>
+  </div>
+</div>
+
+<!-- Instructions Overlay -->
+<div class="overlay" id="instructionsOverlay">
+  <div class="panel" style="width:500px;">
+    <h3>Claude Instructions</h3>
+    <div class="panel-subtitle">tell Claude how to summarize your emails and generate tasks</div>
+    <div class="field">
+      <label>Instructions</label>
+      <textarea id="inp-instructions" rows="12" placeholder="Example: Focus on emails about rent, tenants, and property maintenance. Flag anything with a deadline. Create tasks for things I need to reply to." style="width:100%;padding:10px 12px;border:0.5px solid var(--border);border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--bg);outline:none;resize:vertical;line-height:1.5;"></textarea>
+    </div>
+    <div class="panel-actions">
+      <button class="btn-cancel" onclick="closeInstructions()">Cancel</button>
+      <button class="btn-save" onclick="saveInstructions()">Save</button>
+    </div>
+    <p class="panel-hint">takes effect on next refresh</p>
+  </div>
+</div>
+
+<!-- FICO Scores Overlay -->
+<div class="overlay" id="ficoOverlay">
+  <div class="panel">
+    <h3>Mortgage FICO Scores</h3>
+    <div class="panel-subtitle">enter your 3 mortgage FICO scores (5, 4, 2)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+      <div class="field"><label>FICO 5 (EQ)</label><input type="number" id="inp-fico5" placeholder="e.g. 659"></div>
+      <div class="field"><label>FICO 4 (TU)</label><input type="number" id="inp-fico4" placeholder="e.g. 652"></div>
+      <div class="field"><label>FICO 2 (EX)</label><input type="number" id="inp-fico2" placeholder="e.g. 648"></div>
+    </div>
+    <div class="panel-actions">
+      <button class="btn-cancel" onclick="closeFico()">Cancel</button>
+      <button class="btn-save" onclick="saveFico()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tenants Overlay -->
+<div class="overlay" id="tenantsOverlay">
+  <div class="panel" style="width:500px;">
+    <h3>Manage Tenants</h3>
+    <div class="panel-subtitle">add tenants with rent amounts and due dates</div>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;margin-bottom:12px;">
+      <input type="text" id="inp-tenant-name" placeholder="Tenant name" style="padding:8px;border:0.5px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'DM Sans',sans-serif;">
+      <input type="number" id="inp-tenant-rent" placeholder="Rent $" style="padding:8px;border:0.5px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'DM Mono',monospace;">
+      <input type="number" id="inp-tenant-due" placeholder="Due day" min="1" max="31" style="padding:8px;border:0.5px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'DM Mono',monospace;">
+      <button class="btn-save" onclick="addTenant()" style="padding:8px 14px;font-size:12px;">add</button>
+    </div>
+    <div id="tenantEditList"></div>
+    <div class="panel-actions">
+      <button class="btn-save" onclick="closeTenantsOverlay()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Private Metrics Overlay -->
+<div class="overlay" id="privateOverlay">
+  <div class="panel">
+    <h3>Private Metrics</h3>
+    <div class="panel-subtitle">sensitive numbers -- not shown on main dashboard</div>
+    <div class="field">
+      <label>Portfolio Cash Flow This Month ($)</label>
+      <input type="number" id="inp-cashflow" placeholder="e.g. 420">
+    </div>
+    <div class="field">
+      <label>Total Revolving Debt ($)</label>
+      <input type="number" id="inp-debt" placeholder="e.g. 22080">
+    </div>
+    <div id="privateDisplay" style="margin-top:1rem;"></div>
+    <div class="panel-actions">
+      <button class="btn-cancel" onclick="closePrivate()">Cancel</button>
+      <button class="btn-save" onclick="savePrivate()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Calendar Settings Overlay -->
+<div class="overlay" id="calendarOverlay">
+  <div class="panel">
+    <h3>Calendar Feed</h3>
+    <div class="panel-subtitle">paste your iCloud public calendar URL</div>
+    <div class="field">
+      <label>ICS Feed URL</label>
+      <input type="text" id="inp-cal-url" placeholder="webcal://p123-caldav.icloud.com/published/2/...">
+    </div>
+    <div class="panel-actions">
+      <button class="btn-cancel" onclick="closeCalendar()">Cancel</button>
+      <button class="btn-save" onclick="saveCalendar()">Save</button>
+    </div>
+    <p class="panel-hint">icloud.com -- Calendar -- Share -- Public Calendar</p>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div class="brand">
+      <h1>Blackburn</h1>
+      <p>Personal dashboard</p>
+    </div>
+    <div class="divider-v"></div>
+    <div class="date-block">
+      <div class="day" id="dayDisplay"></div>
+      <div class="full-date" id="dateDisplay"></div>
+    </div>
+    <div class="divider-v"></div>
+    <div class="fico-header" onclick="openFico()" title="Click to update scores">
+      <div class="fico-label">Mortgage FICO (5,4,2)</div>
+      <div class="fico-scores" id="ficoDisplay">-- / -- / --</div>
+      <div class="fico-updated" id="ficoUpdated"></div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-badge"><div class="live-dot"></div>live</div>
+    <button class="icon-btn" onclick="openInstructions()">&#9998; instructions</button>
+    <button class="icon-btn" onclick="openPrivate()">&#128274; private</button>
+    <button class="icon-btn" onclick="openSettings()">&#9881; settings</button>
+    <button class="icon-btn" onclick="App.refreshAll()">&#8635; refresh</button>
+  </div>
+</div>
+
+<!-- Connectors -->
+<div class="connectors">
+  <div class="connector"><div class="connector-dot off" id="dot-supabase"></div>supabase</div>
+  <div class="connector"><div class="connector-dot off" id="dot-claude"></div>claude</div>
+  <div class="connector"><div class="connector-dot off" id="dot-calendar"></div>calendar</div>
+</div>
+
+<!-- Stats Row -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-label">Open Tasks</div>
+    <div class="stat-value" id="stat-tasks">--</div>
+    <div class="stat-sub" id="stat-tasks-sub">from supabase</div>
+  </div>
+  <div class="stat-card accent">
+    <div class="stat-label">Rent Collection</div>
+    <div class="stat-value" id="stat-rent-pct">--%</div>
+    <div class="stat-sub" id="stat-rent-sub">of due rent collected</div>
+  </div>
+</div>
+
+<!-- Emails -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">Inbox</span>
+    <div class="section-meta">
+      <span class="section-ts" id="ts-emails"></span>
+      <span class="section-count" id="count-emails">--</span>
+    </div>
+  </div>
+  <div id="emailList" class="email-grid">
+    <div class="state-msg" style="grid-column:1/-1">connect supabase in settings to see emails</div>
+  </div>
+</div>
+
+<!-- Tasks -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">Tasks</span>
+    <div class="section-meta">
+      <span class="section-ts" id="ts-tasks"></span>
+      <span class="section-count" id="count-tasks">--</span>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <input type="text" id="newTaskInput" placeholder="Add a task..." style="flex:1;padding:8px 12px;border:0.5px solid var(--border);border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--bg);outline:none;">
+      <select id="newTaskPriority" style="padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--radius);font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);background:var(--bg);outline:none;">
+        <option value="4">p1 urgent</option>
+        <option value="3">p2 high</option>
+        <option value="2" selected>p3 normal</option>
+        <option value="1">p4 low</option>
+      </select>
+      <button class="btn-save" onclick="addTask()" style="padding:8px 14px;font-size:12px;">add</button>
+    </div>
+    <div id="taskList" class="task-list">
+      <div class="state-msg">loading tasks...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Calendar -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">Calendar</span>
+    <div class="section-meta">
+      <span class="section-ts" id="ts-calendar"></span>
+      <span class="section-count" id="count-calendar">--</span>
+      <button class="icon-btn" onclick="openCalendarSettings()">&#9998; feeds</button>
+    </div>
+  </div>
+  <div class="card">
+    <div id="calendarList" class="cal-list">
+      <div class="state-msg">add calendar feeds in settings to see events</div>
+    </div>
+  </div>
+</div>
+
+<!-- Rental Portfolio -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title">Rental Portfolio</span>
+    <div class="section-meta">
+      <button class="icon-btn" onclick="openTenantsOverlay()">&#9998; tenants</button>
+    </div>
+  </div>
+
+  <!-- Rent collection card -->
+  <div class="metric-card green-tint" style="margin-bottom:1rem;">
+    <div class="metric-label">Rent Collection -- This Month</div>
+    <div style="display:flex;align-items:baseline;gap:12px;">
+      <div class="metric-value" id="m-rent-pct">--%</div>
+      <div class="metric-sub" id="m-rent-detail"></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="m-rent-bar" style="width:0%"></div></div>
+      <div class="progress-label"><span id="m-rent-collected">$0</span><span id="m-rent-due">$0 due</span></div>
+    </div>
+  </div>
+
+  <!-- Tenant list -->
+  <div class="card">
+    <div id="tenantList">
+      <div class="state-msg">add tenants to track rent collection</div>
+    </div>
+  </div>
+
+  <div class="refi-strip">
+    <div class="refi-strip-left">
+      <div class="refi-strip-dot"></div>
+      <div class="refi-strip-text">portfolio refi goal &mdash; 5 properties &middot; Blackburn Real Estate LLC</div>
+    </div>
+    <div class="refi-strip-hint">hit 700 &rarr; contact Ian</div>
+  </div>
+</div>
+
+<script>
+/* ===============================================
+   Config
+   =============================================== */
+var Config = {
+  get SUPABASE_URL()  { return localStorage.getItem('cfg-sb-url') || ''; },
+  get SUPABASE_KEY()  { return localStorage.getItem('cfg-sb-key') || ''; },
+  get ANTHROPIC_KEY() { return localStorage.getItem('cfg-anthropic-key') || ''; },
+  REFRESH_MS: 5 * 60 * 1000,
+  CLAUDE_MODEL: 'claude-sonnet-4-20250514',
+  MAX_EMAILS: 20,
+};
+
+/* ===============================================
+   Helpers
+   =============================================== */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmt(n) { return n > 0 ? '$' + n.toLocaleString() : '--'; }
+function timeStr() { return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+function setTs(id) { document.getElementById(id).textContent = 'updated ' + timeStr(); }
+function setDot(id, state) { document.getElementById(id).className = 'connector-dot ' + state; }
+
+/* ===============================================
+   Supabase REST client
+   =============================================== */
+var Supabase = {
+  headers: function() {
+    return {
+      'apikey': Config.SUPABASE_KEY,
+      'Authorization': 'Bearer ' + Config.SUPABASE_KEY,
+      'Content-Type': 'application/json',
+    };
+  },
+  fetchEmails: async function(limit) {
+    limit = limit || Config.MAX_EMAILS;
+    var url = Config.SUPABASE_URL + '/rest/v1/emails?order=received_at.desc&limit=' + limit;
+    var res = await fetch(url, { headers: this.headers() });
+    if (!res.ok) throw new Error('Supabase ' + res.status);
+    return res.json();
+  },
+  updateSummary: async function(id, summaryJson) {
+    var url = Config.SUPABASE_URL + '/rest/v1/emails?id=eq.' + id;
+    await fetch(url, {
+      method: 'PATCH',
+      headers: Object.assign(this.headers(), { 'Prefer': 'return=minimal' }),
+      body: JSON.stringify({ summary: summaryJson }),
+    });
+  },
+  fetchTasks: async function() {
+    var url = Config.SUPABASE_URL + '/rest/v1/tasks?order=priority.desc,created_at.desc&is_done=eq.false&limit=20';
+    var res = await fetch(url, { headers: this.headers() });
+    if (!res.ok) throw new Error('Supabase ' + res.status);
+    return res.json();
+  },
+  addTask: async function(content, priority) {
+    var url = Config.SUPABASE_URL + '/rest/v1/tasks';
+    var res = await fetch(url, {
+      method: 'POST',
+      headers: Object.assign(this.headers(), { 'Prefer': 'return=representation' }),
+      body: JSON.stringify({ content: content, priority: priority, is_done: false }),
+    });
+    if (!res.ok) throw new Error('Supabase ' + res.status);
+    return res.json();
+  },
+  completeTask: async function(id) {
+    var url = Config.SUPABASE_URL + '/rest/v1/tasks?id=eq.' + id;
+    await fetch(url, {
+      method: 'PATCH',
+      headers: Object.assign(this.headers(), { 'Prefer': 'return=minimal' }),
+      body: JSON.stringify({ is_done: true }),
+    });
+  },
+};
+
+/* ===============================================
+   Claude Summarizer
+   =============================================== */
+var Summarizer = {
+  summarizeBatch: async function(emails) {
+    var unsummarized = emails.filter(function(e) { return !e.summary; });
+    if (!unsummarized.length || !Config.ANTHROPIC_KEY) return;
+
+    var emailBlock = unsummarized.map(function(e, i) {
+      return '[' + (i+1) + '] From: ' + e.from_name + '\nSubject: ' + e.subject + '\nBody: ' + (e.snippet || e.body_text || '(empty)');
+    }).join('\n\n');
+
+    try {
+      var customInstructions = localStorage.getItem('cfg-instructions') || '';
+      var systemPrompt = 'You summarize emails for Ethan Blackburn\'s personal dashboard. Ethan is a W2 employee at The David Allen Company and owner of Blackburn Real Estate LLC (6 rental properties). Return a JSON array only, no markdown fences. Each object must have: "index" (1-based position in list), "summary" (one plain sentence), "tags" (array of zero or more of: "urgent", "action_needed", "mentions_you", "fyi"), "tasks" (array of strings -- action items Ethan needs to do based on this email. Use short imperative sentences. Empty array if no action needed). Prioritize flagging anything related to: tenants, rent, property maintenance, lease renewals, legal/compliance, and deadlines.';
+      if (customInstructions) {
+        systemPrompt += '\n\nADDITIONAL USER INSTRUCTIONS:\n' + customInstructions;
+      }
+
+      var res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': Config.ANTHROPIC_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: Config.CLAUDE_MODEL,
+          max_tokens: 1500,
+          system: systemPrompt,
+          messages: [{ role: 'user', content: emailBlock }],
+        }),
+      });
+      var data = await res.json();
+      var raw = data.content[0].text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+      var results = JSON.parse(raw);
+      setDot('dot-claude', 'ok');
+
+      var newTasks = [];
+      results.forEach(function(r) {
+        var email = unsummarized[r.index - 1];
+        if (!email) return;
+        var summaryObj = { summary: r.summary, tags: r.tags };
+        email.summary = summaryObj;
+        Supabase.updateSummary(email.id, summaryObj);
+        if (r.tasks && r.tasks.length) {
+          r.tasks.forEach(function(taskText) { newTasks.push(taskText); });
+        }
+      });
+
+      renderEmails(emails);
+
+      for (var i = 0; i < newTasks.length; i++) {
+        try { await Supabase.addTask(newTasks[i], 3); } catch(e) { console.error('Task add failed:', e); }
+      }
+      if (newTasks.length) App.refreshTasks();
+    } catch(e) {
+      console.error('Summarization failed:', e);
+      setDot('dot-claude', 'err');
+    }
+  },
+};
+
+/* ===============================================
+   Render -- Emails
+   =============================================== */
+function renderEmails(emails) {
+  var el = document.getElementById('emailList');
+  var countEl = document.getElementById('count-emails');
+
+  if (!emails.length) {
+    el.innerHTML = '<div class="state-msg" style="grid-column:1/-1">inbox zero &#10003;</div>';
+    countEl.textContent = '0';
+    return;
+  }
+
+  var html = emails.map(function(e) {
+    var s = e.summary || {};
+    if (typeof s === 'string') { try { s = JSON.parse(s); } catch(x) { s = {}; } }
+    var tags = s.tags || [];
+    var isUrgent = tags.indexOf('urgent') !== -1;
+    var isAction = tags.indexOf('action_needed') !== -1;
+
+    var borderClass = isUrgent ? 'urgent' : isAction ? 'action' : 'fyi';
+    var tagHtml = tags.map(function(t) {
+      var cls = t === 'urgent' ? 'tag-urgent' : t === 'action_needed' ? 'tag-action' : t === 'mentions_you' ? 'tag-you' : 'tag-fyi';
+      return '<span class="tag ' + cls + '">' + t.replace('_', ' ') + '</span>';
+    }).join('');
+
+    var summaryHtml = s.summary
+      ? '<div class="email-summary">' + esc(s.summary) + '</div>'
+      : '<div class="skeleton"></div><div class="skeleton"></div>';
+
+    return '<div class="email-card ' + borderClass + '">' +
+      '<div class="email-from">' + esc(e.from_name || 'Unknown') + '</div>' +
+      '<div class="email-subject">' + esc(e.subject || '(no subject)') + '</div>' +
+      summaryHtml +
+      '<div class="email-tags">' + tagHtml + '</div>' +
+    '</div>';
+  }).join('');
+
+  el.innerHTML = html;
+  countEl.textContent = emails.length + ' emails';
+}
+
+/* ===============================================
+   Render -- Tasks
+   =============================================== */
+function renderTasks(tasks) {
+  var el = document.getElementById('taskList');
+  var countEl = document.getElementById('count-tasks');
+
+  countEl.textContent = tasks.length + ' open';
+  document.getElementById('stat-tasks').textContent = tasks.length;
+  document.getElementById('stat-tasks-sub').textContent = tasks.length ? tasks.length + ' open' : 'all clear';
+
+  if (!tasks.length) {
+    el.innerHTML = '<div class="state-msg">all clear &#10003;</div>';
+    return;
+  }
+
+  el.innerHTML = tasks.map(function(t) {
+    return '<div class="task-item">' +
+      '<div class="priority-dot p-' + t.priority + '" style="cursor:pointer" onclick="completeTask(\'' + t.id + '\')" title="mark done"></div>' +
+      '<div style="flex:1"><div class="task-text">' + esc(t.content) + '</div>' +
+      '<div class="task-meta">' + (t.due_date ? 'due ' + t.due_date : '') + '</div></div>' +
+      '<button onclick="completeTask(\'' + t.id + '\')" style="background:none;border:0.5px solid var(--border);border-radius:var(--radius);padding:4px 10px;font-family:DM Mono,monospace;font-size:10px;color:var(--text-faint);cursor:pointer;">done</button>' +
+    '</div>';
+  }).join('');
+}
+
+async function addTask() {
+  var input = document.getElementById('newTaskInput');
+  var priority = document.getElementById('newTaskPriority').value;
+  var content = input.value.trim();
+  if (!content) return;
+  try {
+    await Supabase.addTask(content, parseInt(priority));
+    input.value = '';
+    App.refreshTasks();
+  } catch(e) { alert('Failed to add task: ' + e.message); }
+}
+
+async function completeTask(id) {
+  try {
+    await Supabase.completeTask(id);
+    App.refreshTasks();
+  } catch(e) { alert('Failed: ' + e.message); }
+}
+
+document.getElementById('newTaskInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') addTask();
+});
+
+/* ===============================================
+   Tenants & Rent Collection (localStorage)
+   =============================================== */
+function getTenants() {
+  try { return JSON.parse(localStorage.getItem('tenants') || '[]'); } catch(e) { return []; }
+}
+function saveTenants(list) { localStorage.setItem('tenants', JSON.stringify(list)); }
+
+function addTenant() {
+  var name = document.getElementById('inp-tenant-name').value.trim();
+  var rent = parseInt(document.getElementById('inp-tenant-rent').value) || 0;
+  var due = parseInt(document.getElementById('inp-tenant-due').value) || 1;
+  if (!name || !rent) return;
+  var tenants = getTenants();
+  tenants.push({ name: name, rent: rent, dueDay: due, paid: false, paidMonth: '' });
+  saveTenants(tenants);
+  document.getElementById('inp-tenant-name').value = '';
+  document.getElementById('inp-tenant-rent').value = '';
+  document.getElementById('inp-tenant-due').value = '';
+  renderTenantEditList();
+  renderRentCollection();
+}
+
+function removeTenant(idx) {
+  var tenants = getTenants();
+  tenants.splice(idx, 1);
+  saveTenants(tenants);
+  renderTenantEditList();
+  renderRentCollection();
+}
+
+function togglePaid(idx) {
+  var tenants = getTenants();
+  var t = tenants[idx];
+  var currentMonth = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0');
+  if (t.paidMonth === currentMonth) {
+    t.paid = false;
+    t.paidMonth = '';
+  } else {
+    t.paid = true;
+    t.paidMonth = currentMonth;
+  }
+  saveTenants(tenants);
+  renderRentCollection();
+}
+
+function renderTenantEditList() {
+  var tenants = getTenants();
+  var el = document.getElementById('tenantEditList');
+  if (!tenants.length) { el.innerHTML = '<div class="state-msg">no tenants added yet</div>'; return; }
+  el.innerHTML = tenants.map(function(t, i) {
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--border-light);">' +
+      '<span style="font-size:13px;">' + esc(t.name) + '</span>' +
+      '<span style="font-family:DM Mono,monospace;font-size:11px;color:var(--text-faint);">$' + t.rent + ' / due ' + t.dueDay + 'th</span>' +
+      '<button class="btn-danger" onclick="removeTenant(' + i + ')">remove</button>' +
+    '</div>';
+  }).join('');
+}
+
+function renderRentCollection() {
+  var tenants = getTenants();
+  var today = new Date().getDate();
+  var currentMonth = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0');
+
+  // Reset paid status if month changed
+  tenants.forEach(function(t) {
+    if (t.paidMonth && t.paidMonth !== currentMonth) {
+      t.paid = false;
+      t.paidMonth = '';
+    }
+  });
+  saveTenants(tenants);
+
+  var totalExpected = 0;
+  var totalDueSoFar = 0;
+  var totalCollected = 0;
+
+  tenants.forEach(function(t) {
+    totalExpected += t.rent;
+    if (today >= t.dueDay) {
+      totalDueSoFar += t.rent;
+    }
+    if (t.paid) {
+      totalCollected += t.rent;
+    }
+  });
+
+  // Percentage based on what's actually due so far
+  var pct = totalDueSoFar > 0 ? Math.round(totalCollected / totalDueSoFar * 100) : (tenants.length ? 100 : 0);
+
+  document.getElementById('m-rent-pct').textContent = (tenants.length ? pct + '%' : '--%');
+  document.getElementById('stat-rent-pct').textContent = (tenants.length ? pct + '%' : '--%');
+
+  var detail = '';
+  if (tenants.length) {
+    detail = '$' + totalCollected.toLocaleString() + ' of $' + totalDueSoFar.toLocaleString() + ' due so far';
+  }
+  document.getElementById('m-rent-detail').textContent = detail;
+  document.getElementById('stat-rent-sub').textContent = tenants.length ? detail : 'add tenants to track';
+
+  document.getElementById('m-rent-bar').style.width = (totalDueSoFar > 0 ? Math.min(100, pct) : 0) + '%';
+  document.getElementById('m-rent-collected').textContent = '$' + totalCollected.toLocaleString();
+  document.getElementById('m-rent-due').textContent = '$' + totalExpected.toLocaleString() + ' total';
+
+  // Render tenant list on main page
+  var listEl = document.getElementById('tenantList');
+  if (!tenants.length) {
+    listEl.innerHTML = '<div class="state-msg">add tenants to track rent collection</div>';
+    return;
+  }
+
+  listEl.innerHTML = tenants.map(function(t, i) {
+    var isPaid = t.paidMonth === currentMonth;
+    var isLate = !isPaid && today > t.dueDay;
+    var notYetDue = !isPaid && today < t.dueDay;
+    var statusClass = isPaid ? 'tenant-paid' : isLate ? 'tenant-late' : 'tenant-pending';
+    var statusText = isPaid ? 'paid' : isLate ? 'late' : 'due ' + t.dueDay + 'th';
+
+    return '<div class="tenant-row">' +
+      '<span class="tenant-name">' + esc(t.name) + '</span>' +
+      '<span class="tenant-amt">$' + t.rent.toLocaleString() + '</span>' +
+      '<span class="tenant-status ' + statusClass + '" onclick="togglePaid(' + i + ')">' + statusText + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+/* ===============================================
+   FICO Scores (localStorage)
+   =============================================== */
+function loadFico() {
+  var f5 = localStorage.getItem('fico-5') || '';
+  var f4 = localStorage.getItem('fico-4') || '';
+  var f2 = localStorage.getItem('fico-2') || '';
+  var updated = localStorage.getItem('fico-updated') || '';
+
+  if (f5 && f4 && f2) {
+    document.getElementById('ficoDisplay').textContent = f5 + ' / ' + f4 + ' / ' + f2;
+    // Median is the middle value
+    var scores = [parseInt(f5), parseInt(f4), parseInt(f2)].sort(function(a,b){ return a-b; });
+    var median = scores[1];
+    var pts = 700 - median;
+    document.getElementById('ficoUpdated').textContent = updated ? 'updated ' + updated : '';
+  } else {
+    document.getElementById('ficoDisplay').textContent = '-- / -- / --';
+    document.getElementById('ficoUpdated').textContent = 'click to enter scores';
+  }
+}
+
+function openFico() {
+  document.getElementById('inp-fico5').value = localStorage.getItem('fico-5') || '';
+  document.getElementById('inp-fico4').value = localStorage.getItem('fico-4') || '';
+  document.getElementById('inp-fico2').value = localStorage.getItem('fico-2') || '';
+  document.getElementById('ficoOverlay').classList.add('open');
+}
+function closeFico() { document.getElementById('ficoOverlay').classList.remove('open'); }
+function saveFico() {
+  var f5 = document.getElementById('inp-fico5').value.trim();
+  var f4 = document.getElementById('inp-fico4').value.trim();
+  var f2 = document.getElementById('inp-fico2').value.trim();
+  if (f5) localStorage.setItem('fico-5', f5);
+  if (f4) localStorage.setItem('fico-4', f4);
+  if (f2) localStorage.setItem('fico-2', f2);
+  var now = new Date();
+  var dateStr = (now.getMonth()+1) + '/' + now.getDate() + '/' + now.getFullYear();
+  localStorage.setItem('fico-updated', dateStr);
+  closeFico();
+  loadFico();
+}
+document.getElementById('ficoOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeFico();
+});
+
+/* ===============================================
+   Overlays
+   =============================================== */
+function openSettings(firstRun) {
+  document.getElementById('inp-sb-url').value = localStorage.getItem('cfg-sb-url') || '';
+  document.getElementById('inp-sb-key').value = localStorage.getItem('cfg-sb-key') || '';
+  document.getElementById('inp-anthropic').value = localStorage.getItem('cfg-anthropic-key') || '';
+  document.getElementById('firstRunMsg').style.display = firstRun ? 'block' : 'none';
+  document.getElementById('settingsOverlay').classList.add('open');
+}
+function closeSettings() { document.getElementById('settingsOverlay').classList.remove('open'); }
+function saveSettings() {
+  var fields = [
+    ['inp-sb-url', 'cfg-sb-url'],
+    ['inp-sb-key', 'cfg-sb-key'],
+    ['inp-anthropic', 'cfg-anthropic-key'],
+  ];
+  fields.forEach(function(f) {
+    var v = document.getElementById(f[0]).value.trim();
+    if (v) localStorage.setItem(f[1], v);
+  });
+  closeSettings();
+  App.refreshAll();
+}
+document.getElementById('settingsOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeSettings();
+});
+
+function openInstructions() {
+  document.getElementById('inp-instructions').value = localStorage.getItem('cfg-instructions') || '';
+  document.getElementById('instructionsOverlay').classList.add('open');
+}
+function closeInstructions() { document.getElementById('instructionsOverlay').classList.remove('open'); }
+function saveInstructions() {
+  var v = document.getElementById('inp-instructions').value.trim();
+  if (v) { localStorage.setItem('cfg-instructions', v); } else { localStorage.removeItem('cfg-instructions'); }
+  closeInstructions();
+}
+document.getElementById('instructionsOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeInstructions();
+});
+
+function openTenantsOverlay() {
+  renderTenantEditList();
+  document.getElementById('tenantsOverlay').classList.add('open');
+}
+function closeTenantsOverlay() { document.getElementById('tenantsOverlay').classList.remove('open'); }
+document.getElementById('tenantsOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeTenantsOverlay();
+});
+
+function openPrivate() {
+  document.getElementById('inp-cashflow').value = localStorage.getItem('m-cashflow') || '';
+  document.getElementById('inp-debt').value = localStorage.getItem('m-debt') || '';
+  // Show current values
+  var cf = parseFloat(localStorage.getItem('m-cashflow') || '0');
+  var debt = parseFloat(localStorage.getItem('m-debt') || '0');
+  var html = '';
+  if (cf || debt) {
+    html = '<div style="border-top:0.5px solid var(--border);padding-top:1rem;">';
+    if (cf) html += '<div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-family:DM Mono,monospace;font-size:11px;color:var(--text-faint);">Cash Flow</span><span style="font-family:DM Mono,monospace;font-size:11px;color:' + (cf >= 0 ? 'var(--forest)' : 'var(--red)') + ';">' + (cf >= 0 ? '+' : '-') + '$' + Math.abs(cf).toLocaleString() + '</span></div>';
+    if (debt) html += '<div style="display:flex;justify-content:space-between;"><span style="font-family:DM Mono,monospace;font-size:11px;color:var(--text-faint);">Revolving Debt</span><span style="font-family:DM Mono,monospace;font-size:11px;color:var(--text);">$' + debt.toLocaleString() + '</span></div>';
+    html += '</div>';
+  }
+  document.getElementById('privateDisplay').innerHTML = html;
+  document.getElementById('privateOverlay').classList.add('open');
+}
+function closePrivate() { document.getElementById('privateOverlay').classList.remove('open'); }
+function savePrivate() {
+  var cf = document.getElementById('inp-cashflow').value.trim();
+  var debt = document.getElementById('inp-debt').value.trim();
+  if (cf) localStorage.setItem('m-cashflow', cf); else localStorage.removeItem('m-cashflow');
+  if (debt) localStorage.setItem('m-debt', debt); else localStorage.removeItem('m-debt');
+  closePrivate();
+}
+document.getElementById('privateOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closePrivate();
+});
+
+/* ===============================================
+   Calendar (iCloud ICS)
+   =============================================== */
+function getCalUrl() { return localStorage.getItem('cfg-cal-url') || ''; }
+
+function parseICS(text) {
+  var events = [];
+  var blocks = text.split('BEGIN:VEVENT');
+  for (var i = 1; i < blocks.length; i++) {
+    var block = blocks[i].split('END:VEVENT')[0];
+    var ev = {};
+    var lines = block.replace(/\r\n /g, '').split(/\r?\n/);
+    lines.forEach(function(line) {
+      if (line.indexOf('SUMMARY') === 0) {
+        ev.title = line.replace(/^SUMMARY[^:]*:/, '');
+      } else if (line.indexOf('DTSTART') === 0) {
+        ev.dtstart = parseICSDate(line);
+      } else if (line.indexOf('DTEND') === 0) {
+        ev.dtend = parseICSDate(line);
+      } else if (line.indexOf('LOCATION') === 0) {
+        ev.location = line.replace(/^LOCATION[^:]*:/, '');
+      }
+    });
+    if (ev.title && ev.dtstart) {
+      ev.allDay = line ? false : false;
+      // Check if it was a DATE-only (all day)
+      var dtstartLine = lines.filter(function(l) { return l.indexOf('DTSTART') === 0; })[0] || '';
+      ev.allDay = dtstartLine.indexOf('VALUE=DATE') !== -1 || (dtstartLine.indexOf('T') === -1 && dtstartLine.match(/:\d{8}$/));
+      events.push(ev);
+    }
+  }
+  return events;
+}
+
+function parseICSDate(line) {
+  var val = line.replace(/^[^:]*:/, '');
+  // Format: 20260402T140000Z or 20260402
+  if (val.length === 8) {
+    return new Date(parseInt(val.substr(0,4)), parseInt(val.substr(4,2))-1, parseInt(val.substr(6,2)));
+  }
+  var y = parseInt(val.substr(0,4));
+  var mo = parseInt(val.substr(4,2))-1;
+  var d = parseInt(val.substr(6,2));
+  var h = parseInt(val.substr(9,2)) || 0;
+  var mi = parseInt(val.substr(11,2)) || 0;
+  if (val.indexOf('Z') !== -1) {
+    return new Date(Date.UTC(y, mo, d, h, mi));
+  }
+  return new Date(y, mo, d, h, mi);
+}
+
+function renderCalendar(events) {
+  var el = document.getElementById('calendarList');
+  var countEl = document.getElementById('count-calendar');
+
+  // Filter to today and next 14 days
+  var now = new Date();
+  var startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  var endRange = new Date(startOfDay.getTime() + 14 * 24 * 60 * 60 * 1000);
+
+  var upcoming = events.filter(function(e) {
+    return e.dtstart >= startOfDay && e.dtstart < endRange;
+  }).sort(function(a, b) { return a.dtstart - b.dtstart; });
+
+  countEl.textContent = upcoming.length + ' upcoming';
+
+  if (!upcoming.length) {
+    el.innerHTML = '<div class="state-msg">no events in the next 14 days</div>';
+    return;
+  }
+
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  el.innerHTML = upcoming.map(function(e) {
+    var d = e.dtstart;
+    var isToday = d.toDateString() === now.toDateString();
+    var isTomorrow = d.toDateString() === new Date(now.getTime() + 86400000).toDateString();
+    var dateLabel = isToday ? 'Today' : isTomorrow ? 'Tomorrow' : days[d.getDay()] + ' ' + months[d.getMonth()] + ' ' + d.getDate();
+
+    var timeLabel = '';
+    if (!e.allDay) {
+      var hr = d.getHours();
+      var mn = d.getMinutes();
+      var ampm = hr >= 12 ? 'pm' : 'am';
+      var h12 = hr % 12 || 12;
+      timeLabel = h12 + (mn ? ':' + String(mn).padStart(2,'0') : '') + ampm;
+    } else {
+      timeLabel = 'all day';
+    }
+
+    // Color by time: morning=blue, afternoon=forest, evening=amber, all-day=forest
+    var colorClass = 'cal-w2';
+    if (e.allDay) { colorClass = 'cal-re'; }
+    else if (d.getHours() >= 17) { colorClass = 'cal-personal'; }
+    else if (d.getHours() >= 12) { colorClass = 'cal-re'; }
+
+    return '<div class="cal-event">' +
+      '<div class="cal-dot ' + colorClass + '"></div>' +
+      '<div class="cal-date">' + dateLabel + '</div>' +
+      '<div style="flex:1"><div class="cal-title">' + esc(e.title) + '</div>' +
+      '<div class="cal-time">' + timeLabel + (e.location ? ' -- ' + esc(e.location) : '') + '</div></div>' +
+    '</div>';
+  }).join('');
+}
+
+function openCalendarSettings() {
+  document.getElementById('inp-cal-url').value = getCalUrl();
+  document.getElementById('calendarOverlay').classList.add('open');
+}
+function closeCalendar() { document.getElementById('calendarOverlay').classList.remove('open'); }
+function saveCalendar() {
+  var v = document.getElementById('inp-cal-url').value.trim();
+  if (v) { localStorage.setItem('cfg-cal-url', v); } else { localStorage.removeItem('cfg-cal-url'); }
+  closeCalendar();
+  App.refreshCalendar();
+}
+document.getElementById('calendarOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeCalendar();
+});
+
+/* ===============================================
+   Date Display
+   =============================================== */
+function updateDate() {
+  var now = new Date();
+  var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('dayDisplay').textContent = days[now.getDay()];
+  document.getElementById('dateDisplay').textContent = months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+}
+
+/* ===============================================
+   App -- main controller
+   =============================================== */
+var App = {
+  refreshEmails: async function() {
+    if (!Config.SUPABASE_URL || !Config.SUPABASE_KEY) {
+      setDot('dot-supabase', 'off');
+      return;
+    }
+    try {
+      var emails = await Supabase.fetchEmails();
+      setDot('dot-supabase', 'ok');
+      renderEmails(emails);
+      setTs('ts-emails');
+      if (Config.ANTHROPIC_KEY) {
+        setDot('dot-claude', 'ok');
+        Summarizer.summarizeBatch(emails);
+      }
+    } catch(e) {
+      setDot('dot-supabase', 'err');
+      document.getElementById('emailList').innerHTML = '<div class="error-msg" style="grid-column:1/-1">couldn\'t load emails -- check Supabase settings</div>';
+    }
+  },
+
+  refreshTasks: async function() {
+    if (!Config.SUPABASE_URL || !Config.SUPABASE_KEY) return;
+    var el = document.getElementById('taskList');
+    el.innerHTML = '<div class="state-msg">loading...</div>';
+    try {
+      var tasks = await Supabase.fetchTasks();
+      renderTasks(tasks);
+      setTs('ts-tasks');
+    } catch(e) {
+      el.innerHTML = '<div class="error-msg">couldn\'t load tasks -- ' + esc(e.message) + '</div>';
+      document.getElementById('count-tasks').textContent = '--';
+    }
+  },
+
+  refreshCalendar: async function() {
+    var url = getCalUrl();
+    if (!url) {
+      setDot('dot-calendar', 'off');
+      return;
+    }
+    // Convert webcal:// to https://
+    url = url.replace(/^webcal:\/\//, 'https://');
+    try {
+      var proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+      var res = await fetch(proxyUrl);
+      if (!res.ok) throw new Error('Calendar fetch ' + res.status);
+      var text = await res.text();
+      var events = parseICS(text);
+      setDot('dot-calendar', 'ok');
+      setTs('ts-calendar');
+      renderCalendar(events);
+    } catch(e) {
+      console.error('Calendar failed:', e);
+      setDot('dot-calendar', 'err');
+      document.getElementById('calendarList').innerHTML = '<div class="error-msg">couldn\'t load calendar -- check feed URL</div>';
+    }
+  },
+
+  refreshAll: async function() {
+    updateDate();
+    loadFico();
+    renderRentCollection();
+    await Promise.allSettled([this.refreshEmails(), this.refreshTasks(), this.refreshCalendar()]);
+  },
+
+  init: function() {
+    updateDate();
+    loadFico();
+    renderRentCollection();
+    this.refreshAll();
+    setInterval(function() { App.refreshAll(); }, Config.REFRESH_MS);
+    if (!Config.SUPABASE_URL) {
+      setTimeout(function() { openSettings(true); }, 500);
+    }
+  },
+};
+
+App.init();
+</script>
+</body>
+</html>
